@@ -103,18 +103,20 @@ body {
   padding: 11px 12px;
 }
 .acc-num {
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  border: 2px solid var(--hairline);
+  min-width: 22px; height: 20px;
+  padding: 0 7px;
+  border-radius: 5px;
+  border: 1.5px solid var(--hairline);
   background: var(--surface);
   color: var(--muted);
   font-size: 11px; font-weight: 800;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   transition: all 0.25s ease;
+  letter-spacing: 0.01em;
 }
 .acc-step.active .acc-num,
-.acc-num.active { border-color: var(--red); background: var(--red); color: #fff; }
+.acc-num.active { border-color: #0E0B08; background: #0E0B08; color: #fff; }
 .acc-step.done .acc-num,
 .acc-num.done   { border-color: #30a46c; background: #30a46c; color: #fff; }
 .acc-step-title {
