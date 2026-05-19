@@ -167,8 +167,8 @@ body {
 
 /* ── ACCORDION ── */
 .accordion {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
+  background: #0E0B08;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -185,8 +185,8 @@ body {
 .accordion-icon {
   width: 32px; height: 32px;
   border-radius: 8px;
-  background: rgba(225,31,42,0.1);
-  color: var(--red);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,8 +194,10 @@ body {
   font-weight: 800;
   flex-shrink: 0;
 }
+.accordion-head-title { font-size: 14.5px; font-weight: 800; color: #fff; }
+.accordion-head-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); margin-top: 1px; }
 .accordion-chevron {
-  color: var(--muted);
+  color: rgba(255,255,255,0.35);
   transition: transform 0.2s ease;
   flex-shrink: 0;
   display: flex;
@@ -225,27 +227,29 @@ body {
   object-fit: cover;
   display: block;
 }
+.example-card { border-color: rgba(255,255,255,0.1) !important; }
 .example-caption {
   padding: 8px 10px;
-  background: #fff;
+  background: rgba(255,255,255,0.06);
 }
-.cap-title { font-size: 11.5px; font-weight: 800; letter-spacing: -0.005em; }
-.cap-sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+.cap-title { font-size: 11.5px; font-weight: 800; letter-spacing: -0.005em; color: #fff; }
+.cap-sub { font-size: 10.5px; color: rgba(255,255,255,0.4); margin-top: 1px; }
 
 .instruct-text {
   font-size: 13px;
   line-height: 1.5;
-  color: var(--ink-2);
+  color: rgba(255,255,255,0.6);
 }
+.instruct-text strong { color: #fff; }
 .callout-red {
   margin-top: 10px;
   padding: 10px 12px;
-  background: rgba(225,31,42,0.06);
-  border: 1px solid rgba(225,31,42,0.18);
+  background: rgba(225,31,42,0.12);
+  border: 1px solid rgba(225,31,42,0.3);
   border-radius: 10px;
   font-size: 12.5px;
   line-height: 1.4;
-  color: var(--red-deep);
+  color: #ff6b6b;
   display: flex;
   gap: 8px;
   align-items: flex-start;
@@ -485,7 +489,7 @@ input[type=file] { display: none; }
 }
 .navod-modal.visible { opacity: 1; pointer-events: all; }
 .navod-sheet {
-  background: var(--bg);
+  background: #0E0B08;
   border-radius: 24px 24px 0 0;
   width: 100%;
   max-width: 430px;
@@ -499,7 +503,7 @@ input[type=file] { display: none; }
 .navod-sheet::-webkit-scrollbar { display: none; }
 .navod-handle {
   width: 36px; height: 4px;
-  background: var(--hairline);
+  background: rgba(255,255,255,0.15);
   border-radius: 99px;
   margin: 14px auto 0;
 }
@@ -509,21 +513,21 @@ input[type=file] { display: none; }
   align-items: center;
   justify-content: space-between;
 }
-.navod-title { font-size: 18px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+.navod-title { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
 .navod-close {
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: var(--bg-2);
+  background: rgba(255,255,255,0.1);
   border: none;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  color: var(--muted);
+  color: rgba(255,255,255,0.5);
   flex-shrink: 0;
 }
 .navod-steps { padding: 20px 20px 28px; display: flex; flex-direction: column; gap: 12px; }
 .navod-step {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -543,13 +547,13 @@ input[type=file] { display: none; }
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.navod-step-title { font-size: 14.5px; font-weight: 800; color: var(--ink); line-height: 1.25; }
-.navod-step-sub { font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 2px; line-height: 1.4; }
+.navod-step-title { font-size: 14.5px; font-weight: 800; color: #fff; line-height: 1.25; }
+.navod-step-sub { font-size: 12.5px; color: rgba(255,255,255,0.45); font-weight: 500; margin-top: 2px; line-height: 1.4; }
 .navod-step-photo {
   margin: 0 14px 14px;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  border: 1px solid var(--hairline);
+  border: 1px solid rgba(255,255,255,0.1);
   aspect-ratio: 16/9;
   background: #000;
 }
@@ -557,13 +561,14 @@ input[type=file] { display: none; }
 .navod-step-tip {
   margin: 0 14px 14px;
   padding: 9px 12px;
-  background: var(--bg);
+  background: rgba(255,255,255,0.05);
   border-radius: 8px;
   font-size: 12.5px;
-  color: var(--ink-2);
+  color: rgba(255,255,255,0.55);
   font-weight: 500;
   line-height: 1.45;
 }
+.navod-step-tip strong { color: #fff; }
 .navod-cta {
   margin: 0 20px 8px;
   width: calc(100% - 40px);
@@ -813,8 +818,8 @@ input[type=file] { display: none; }
       <div class="accordion-lhs">
         <div class="accordion-icon">?</div>
         <div>
-          <div style="font-size:14.5px;font-weight:800;color:var(--ink)">Co a jak vyfotit</div>
-          <div style="font-size:11.5px;color:var(--muted);margin-top:1px">Návod &amp; ukázka</div>
+          <div class="accordion-head-title">Co a jak vyfotit</div>
+          <div class="accordion-head-sub">Návod &amp; ukázka</div>
         </div>
       </div>
       <div class="accordion-chevron" id="accordion-chevron">
@@ -855,7 +860,7 @@ input[type=file] { display: none; }
         </svg>
         <div><strong>Důležité:</strong> QR kód i štítek musí být na fotce <strong>dobře čitelný</strong>.</div>
       </div>
-      <button onclick="openNavod()" style="margin-top:10px;width:100%;padding:10px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.005em">
+      <button onclick="openNavod()" style="margin-top:10px;width:100%;padding:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.005em">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Podrobný návod krok po kroku
       </button>
