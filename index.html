@@ -514,6 +514,19 @@ input[type=file] { display: none; }
       </div>
     </button>
 
+    <button class="list-row" onclick="otevritMail()">
+      <div class="list-icon neutral">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-10 6L2 7"/>
+        </svg>
+      </div>
+      <div class="list-body">
+        <div class="list-title">Mám všechny fotky, poslat e‑mailem</div>
+        <div class="list-sub">servis@drozda‑naradi.cz</div>
+      </div>
+    </button>
+
     <button class="list-row" onclick="spustKnihovnu()">
       <div class="list-icon neutral">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -525,19 +538,6 @@ input[type=file] { display: none; }
       <div class="list-body">
         <div class="list-title">Vybrat z knihovny fotek</div>
         <div class="list-sub">Pokud máš fotky už pořízené</div>
-      </div>
-    </button>
-
-    <button class="list-row" onclick="otevritMail()">
-      <div class="list-icon neutral">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2"/>
-          <path d="m22 7-10 6L2 7"/>
-        </svg>
-      </div>
-      <div class="list-body">
-        <div class="list-title">Mám všechny fotky, poslat e‑mailem</div>
-        <div class="list-sub">servis@drozda‑naradi.cz</div>
       </div>
     </button>
 
@@ -689,9 +689,8 @@ function smazFoto(i) { fotos.splice(i, 1); renderGrid(); }
 
 /* ── CHECK READY ── */
 function checkReady() {
-  var firma = document.getElementById('firma').value.trim();
   var pending = fotos.filter(function(f) { return f.status === 'wait' || f.status === 'err'; });
-  var canSubmit = !!(firma && pending.length > 0);
+  var canSubmit = pending.length > 0;
   var btn = document.getElementById('btnUpload');
   if (canSubmit) {
     btn.classList.remove('is-disabled');
