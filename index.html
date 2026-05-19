@@ -820,62 +820,49 @@ input[type=file] { display: none; }
       </div>
     </div>
     <div class="accordion-body" id="accordion-body" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <div style="height:1px;flex:1;background:var(--hairline)"></div>
-        <span style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap">Postup krok po kroku</span>
-        <div style="height:1px;flex:1;background:var(--hairline)"></div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:8px">
-
-        <!-- KROK 1 -->
-        <div class="acc-step" id="step1">
-          <div class="acc-step-head">
-            <div class="acc-num" id="step1-bubble">1</div>
-            <div>
-              <div class="acc-step-title">Zadejte název firmy nebo jméno</div>
-              <div class="acc-step-sub">Povinný údaj pro správné zařazení záruky</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- KROK 2 -->
-        <div class="acc-step" id="step2">
-          <div class="acc-step-head">
-            <div class="acc-num" id="step2-bubble">2</div>
-            <div>
-              <div class="acc-step-title">Vyfoťte QR nálepku nebo štítek</div>
-              <div class="acc-step-sub">Musí být ostrý a čitelný na fotce</div>
-            </div>
-          </div>
-          <div class="acc-step-photos">
-            <div class="acc-photo-card">
-              <div class="acc-photo-img"><img src="assets/example-qr.jpg" alt="QR nálepka"></div>
-              <div class="acc-photo-cap">① QR nálepka<span>na obalu stroje</span></div>
-            </div>
-            <div class="acc-photo-card">
-              <div class="acc-photo-img"><img src="assets/example-label.jpg" alt="Štítek"></div>
-              <div class="acc-photo-cap">② Štítek<span>pokud QR chybí</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- KROK 3 -->
-        <div class="acc-step" id="step3">
-          <div class="acc-step-head">
-            <div class="acc-num" id="step3-bubble">3</div>
-            <div>
-              <div class="acc-step-title">Klikněte „Odeslat"</div>
-              <div class="acc-step-sub">Fotky se nahrají automaticky na Drive</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
       <button onclick="openNavod()" style="margin-top:10px;width:100%;padding:10px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.005em">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Podrobný návod s fotkami
       </button>
+    </div>
+  </div>
+
+  <!-- KROKY — vždy viditelné -->
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="height:1px;flex:1;background:var(--hairline)"></div>
+      <span style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap">Postup</span>
+      <div style="height:1px;flex:1;background:var(--hairline)"></div>
+    </div>
+
+    <div class="acc-step" id="step1">
+      <div class="acc-step-head">
+        <div class="acc-num" id="step1-bubble">1</div>
+        <div>
+          <div class="acc-step-title">Zadejte název firmy nebo jméno</div>
+          <div class="acc-step-sub">Povinný údaj pro správné zařazení záruky</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-step" id="step2">
+      <div class="acc-step-head">
+        <div class="acc-num" id="step2-bubble">2</div>
+        <div>
+          <div class="acc-step-title">Vyfoťte QR nálepku nebo štítek</div>
+          <div class="acc-step-sub">Ostrý a čitelný — viz návod výše</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-step" id="step3">
+      <div class="acc-step-head">
+        <div class="acc-num" id="step3-bubble">3</div>
+        <div>
+          <div class="acc-step-title">Klikněte „Odeslat"</div>
+          <div class="acc-step-sub">Fotky se nahrají automaticky na Drive</div>
+        </div>
+      </div>
     </div>
   </div>
 
