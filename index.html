@@ -226,7 +226,7 @@ body {
 }
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 .photo-tile {
@@ -247,13 +247,19 @@ body {
   background: var(--red);
   color: #fff;
   border: none;
-  font-size: 26px;
-  font-weight: 300;
   box-shadow: 0 8px 20px -10px rgba(225,31,42,0.55);
   cursor: pointer;
   -webkit-appearance: none;
   font-family: inherit;
   transition: transform 0.08s ease;
+  flex-direction: column;
+  gap: 6px;
+}
+.photo-tile.add span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
 }
 .photo-tile.add:active { transform: scale(0.95); opacity: 0.9; }
 .photo-tile.filled {
@@ -472,7 +478,7 @@ input[type=file] { display: none; }
 
   <!-- FIRMA -->
   <div>
-    <p class="s-label">Název firmy</p>
+    <p class="s-label">Název firmy nebo jméno</p>
     <input class="field" type="text" id="firma" placeholder="Zadej název firmy…"
            autocomplete="off" autocorrect="off" spellcheck="false" oninput="onFirma()">
   </div>
@@ -657,7 +663,7 @@ function renderGrid() {
   if (targetCells > 11) targetCells = 11;
   var emptyCount = targetCells - 1 - n;
 
-  var html = '<button class="photo-tile add" onclick="spustKameru()" aria-label="Přidat fotku">+</button>';
+  var html = '<button class="photo-tile add" onclick="spustKameru()" aria-label="Přidat fotku"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Přidat foto</span></button>';
 
   fotos.forEach(function(f, i) {
     var badge = '';
