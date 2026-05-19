@@ -663,7 +663,7 @@ input[type=file] { display: none; }
 
 <script>
 var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXfqyyvyO45Lj1lZabnBpUUQ2Z3C6du3gsKc-UBeROKX3Ayp5aaV4M5aylbzaHQMw2GQ/exec';
-var MAX_MB = 2;
+var MAX_MB = 1.5;
 var fotos = [];
 var currentFolder = '';
 var countdownTimer = null;
@@ -708,7 +708,7 @@ function komprimuj(file, cb) {
     var img = new Image();
     img.onload = function() {
       var canvas = document.createElement('canvas');
-      var w = img.width, h = img.height, maxDim = 2048;
+      var w = img.width, h = img.height, maxDim = 1600;
       if (w > maxDim || h > maxDim) {
         if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
         else       { w = Math.round(w * maxDim / h); h = maxDim; }
@@ -832,38 +832,55 @@ async function nahrat() {
   document.getElementById('progBar').style.width = '0%';
 
   var total = pending.length, done = 0, errors = 0;
-  for (var i = 0; i < fotos.length; i++) {
-    var f = fotos[i];
-    if (f.status !== 'wait' && f.status !== 'err') continue;
+
+  // Paralelní upload — max 3 najednou
+  async function uploadOne(f, idx) {
     f.status = 'uploading'; renderGrid();
-    var uploaded = false;
     for (var attempt = 0; attempt < 3; attempt++) {
       try {
         var resp = await fetch(SCRIPT_URL, {
           method: 'POST',
           body: JSON.stringify({
             folder: currentFolder,
-            filename: currentFolder + '_foto' + pad(i+1) + '.jpg',
+            filename: currentFolder + '_foto' + pad(idx+1) + '.jpg',
             filedata: toBase64(f.data),
             mimetype: 'image/jpeg'
           })
         });
         var r = await resp.json();
-        if (r.status === 'ok') { f.status = 'ok'; done++; uploaded = true; break; }
+        if (r.status === 'ok') { f.status = 'ok'; done++; updateOverlayProgress(); return; }
       } catch(e) {}
-      if (!uploaded && attempt < 2) {
-        document.getElementById('overlaySubLabel').textContent = 'Zkouším znovu (' + (attempt+2) + '/3)…';
-        await new Promise(function(res){ setTimeout(res, 2000); });
-      }
+      if (attempt < 2) await new Promise(function(res){ setTimeout(res, 1500); });
     }
-    if (!uploaded) { f.status = 'err'; errors++; }
+    f.status = 'err'; errors++; updateOverlayProgress();
+  }
+
+  function updateOverlayProgress() {
     var pct = Math.round(((done + errors) / total) * 100);
     document.getElementById('progBar').style.width = pct + '%';
     document.getElementById('overlayFill').style.width = pct + '%';
     document.getElementById('overlayCount').textContent = (done + errors) + ' / ' + total;
-    document.getElementById('overlaySubLabel').textContent = 'Nahrávám fotku ' + (done + errors) + ' z ' + total;
+    document.getElementById('overlaySubLabel').textContent = 'Nahráno ' + done + ' z ' + total;
     renderGrid();
   }
+
+  // Spusť po dávkách po 3
+  var queue = fotos.map(function(f, i) { return { f: f, i: i }; })
+                   .filter(function(x) { return x.f.status === 'uploading' || x.f.status === 'wait' || x.f.status === 'err'; });
+  // reset na wait před startem
+  queue.forEach(function(x) { x.f.status = 'wait'; });
+
+  var CONCURRENCY = 3;
+  var qi = 0;
+  async function runWorker() {
+    while (qi < queue.length) {
+      var item = queue[qi++];
+      await uploadOne(item.f, item.i);
+    }
+  }
+  var workers = [];
+  for (var w = 0; w < Math.min(CONCURRENCY, queue.length); w++) workers.push(runWorker());
+  await Promise.all(workers);
 
   if (errors === 0) {
     // Poděkování na overlay
