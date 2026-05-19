@@ -408,6 +408,66 @@ body {
 
 input[type=file] { display: none; }
 
+/* ── FIRMA POPUP ── */
+.firma-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,12,10,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 997;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 0 16px 40px;
+}
+.firma-popup.visible { opacity: 1; pointer-events: all; }
+.firma-popup-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 22px 20px 18px;
+  width: 100%;
+  max-width: 400px;
+  transform: translateY(20px);
+  transition: transform 0.25s ease;
+  text-align: center;
+}
+.firma-popup.visible .firma-popup-card { transform: translateY(0); }
+.firma-popup-icon {
+  width: 52px; height: 52px;
+  background: rgba(225,31,42,0.08);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+.firma-popup-title {
+  font-size: 16px; font-weight: 800;
+  color: var(--ink); margin-bottom: 6px;
+}
+.firma-popup-sub {
+  font-size: 13.5px; font-weight: 500;
+  color: var(--muted); line-height: 1.5; margin-bottom: 18px;
+}
+.firma-popup-btn {
+  width: 100%; padding: 13px;
+  background: var(--red); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  font-family: 'Manrope', sans-serif;
+  font-size: 14.5px; font-weight: 700;
+  cursor: pointer; letter-spacing: -0.005em;
+  box-shadow: 0 1px 0 var(--red-deep) inset;
+}
+.firma-popup-btn:active { opacity: 0.85; }
+.firma-popup-skip {
+  margin-top: 10px; width: 100%; padding: 10px;
+  background: transparent; border: none;
+  color: var(--muted); font-family: 'Manrope', sans-serif;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+}
+
 /* ── VALIDATION POPUP ── */
 .val-overlay {
   position: fixed;
@@ -705,6 +765,21 @@ input[type=file] { display: none; }
 
 </div><!-- /page -->
 
+<!-- FIRMA POPUP -->
+<div class="firma-popup" id="firmaPopup" onclick="if(event.target===this)closeFirmaPopup()">
+  <div class="firma-popup-card">
+    <div class="firma-popup-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <div class="firma-popup-title">Nejdřív zadejte jméno</div>
+    <div class="firma-popup-sub">Než přidáte fotky, vyplňte prosím<br>název firmy nebo vaše jméno.</div>
+    <button class="firma-popup-btn" onclick="firmaFocus()">Zadat název / jméno</button>
+    <button class="firma-popup-skip" onclick="closeFirmaPopup()">Zrušit</button>
+  </div>
+</div>
+
 <!-- VALIDATION POPUP -->
 <div class="val-overlay" id="valOverlay" onclick="closeValPopup(event)">
   <div class="val-card">
@@ -819,9 +894,32 @@ function komprimuj(file, cb) {
   reader.readAsDataURL(file);
 }
 
+/* ── FIRMA CHECK ── */
+function firmaChybi() {
+  return document.getElementById('firma').value.trim() === '';
+}
+function showFirmaPopup() {
+  document.getElementById('firmaPopup').classList.add('visible');
+}
+function closeFirmaPopup() {
+  document.getElementById('firmaPopup').classList.remove('visible');
+}
+function firmaFocus() {
+  closeFirmaPopup();
+  var inp = document.getElementById('firma');
+  inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function(){ inp.focus(); }, 350);
+}
+
 /* ── FOTO ACTIONS ── */
-function spustKameru()   { document.getElementById('inputKamera').click(); }
-function spustKnihovnu() { document.getElementById('inputKnihovna').click(); }
+function spustKameru() {
+  if (firmaChybi()) { showFirmaPopup(); return; }
+  document.getElementById('inputKamera').click();
+}
+function spustKnihovnu() {
+  if (firmaChybi()) { showFirmaPopup(); return; }
+  document.getElementById('inputKnihovna').click();
+}
 
 function pridatFoto(input) {
   var file = input.files[0];
