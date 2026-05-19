@@ -87,6 +87,71 @@ body {
   flex-shrink: 0;
 }
 
+/* ── STEPS STRIP ── */
+.steps-strip {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  gap: 0;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+  position: relative;
+}
+.step-item + .step-item::before {
+  content: '';
+  position: absolute;
+  left: -50%;
+  top: 13px;
+  width: 100%;
+  height: 2px;
+  background: var(--hairline);
+  z-index: 0;
+  transition: background 0.3s;
+}
+.step-item.done + .step-item::before { background: #30a46c; }
+.step-bubble {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--hairline);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+.step-item.active .step-bubble {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+}
+.step-item.done .step-bubble {
+  border-color: #30a46c;
+  background: #30a46c;
+  color: #fff;
+}
+.step-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  text-align: center;
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+.step-item.active .step-label { color: var(--red); }
+.step-item.done .step-label { color: #30a46c; }
+
 /* ── PAGE ── */
 .page {
   padding: 18px 18px 36px;
@@ -745,6 +810,22 @@ input[type=file] { display: none; }
   </div>
 </div>
 
+<!-- STEPS STRIP -->
+<div class="steps-strip">
+  <div class="step-item active" id="step1">
+    <div class="step-bubble" id="step1-bubble">1</div>
+    <div class="step-label">Název</div>
+  </div>
+  <div class="step-item" id="step2">
+    <div class="step-bubble" id="step2-bubble">2</div>
+    <div class="step-label">Vyfotit</div>
+  </div>
+  <div class="step-item" id="step3">
+    <div class="step-bubble" id="step3-bubble">3</div>
+    <div class="step-label">Odeslat</div>
+  </div>
+</div>
+
 <div class="page">
 
   <!-- ACCORDION -->
@@ -1054,6 +1135,7 @@ function onFirma() {
   var f = document.getElementById('firma').value.trim();
   if (f) { currentFolder = getFolder(f); }
   checkReady();
+  updateSteps();
 }
 
 /* ── KOMPRIMUJ ── */
@@ -1086,6 +1168,25 @@ function komprimuj(file, cb) {
 /* ── NAVOD MODAL ── */
 function openNavod() { document.getElementById('navodModal').classList.add('visible'); }
 function closeNavod() { document.getElementById('navodModal').classList.remove('visible'); }
+
+/* ── STEPS ── */
+function updateSteps() {
+  var hasFirma = document.getElementById('firma').value.trim() !== '';
+  var hasFotos = fotos.length > 0;
+  var canSend  = hasFirma && hasFotos;
+
+  function setState(id, state) {
+    var el = document.getElementById(id);
+    el.className = 'step-item' + (state === 'done' ? ' done' : state === 'active' ? ' active' : '');
+    var bubble = el.querySelector('.step-bubble');
+    if (state === 'done') bubble.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    else bubble.textContent = id.replace('step','');
+  }
+
+  setState('step1', hasFirma ? 'done' : 'active');
+  setState('step2', hasFotos ? 'done' : hasFirma ? 'active' : '');
+  setState('step3', canSend  ? 'active' : '');
+}
 
 /* ── FIRMA CHECK ── */
 function firmaChybi() {
@@ -1175,6 +1276,7 @@ function renderGrid() {
   document.getElementById('badge-text').textContent = n + ' FOTEK';
   document.getElementById('counter-val').textContent = n + ' / 10';
   checkReady();
+  updateSteps();
 }
 
 function smazFoto(i) { fotos.splice(i, 1); renderGrid(); }
