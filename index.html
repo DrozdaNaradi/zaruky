@@ -1159,7 +1159,15 @@ function komprimuj(file, cb) {
 
 /* ── NAVOD MODAL ── */
 function openNavod() { document.getElementById('navodModal').classList.add('visible'); }
-function closeNavod() { document.getElementById('navodModal').classList.remove('visible'); }
+function closeNavod() {
+  document.getElementById('navodModal').classList.remove('visible');
+  if (accordionOpen) {
+    accordionOpen = false;
+    document.getElementById('accordion-body').style.display = 'none';
+    var ch = document.getElementById('accordion-chevron');
+    if (ch) ch.classList.remove('open');
+  }
+}
 
 /* ── STEPS ── */
 function updateSteps() {
