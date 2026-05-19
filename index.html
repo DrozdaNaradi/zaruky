@@ -1124,7 +1124,10 @@ function getDatum() {
 /* ── FIRMA ── */
 function onFirma() {
   var f = document.getElementById('firma').value.trim();
-  if (f) { currentFolder = getFolder(f); }
+  // Přegeneruj složku jen pokud ještě žádná fotka nebyla odeslána
+  var anyUploaded = fotos.some(function(x){ return x.status === 'ok'; });
+  if (f && !anyUploaded) { currentFolder = getFolder(f); }
+  if (!f) { currentFolder = ''; }
   checkReady();
   updateSteps();
 }
@@ -1293,7 +1296,8 @@ function toBase64(du) { return du.split(',')[1]; }
 /* ── NAHRÁT NA DRIVE ── */
 async function nahrat() {
   var firma = document.getElementById('firma').value.trim();
-  currentFolder = getFolder(firma);
+  // Složka se generuje jen jednou — při prvním uploadu, pak zůstává stejná
+  if (!currentFolder) { currentFolder = getFolder(firma); }
   var pending = fotos.filter(function(f) { return f.status === 'wait' || f.status === 'err'; });
   if (!pending.length) return;
 
