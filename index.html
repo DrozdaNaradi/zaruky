@@ -42,30 +42,29 @@ body {
 
 /* ── BRAND HEADER ── */
 .brand-header {
-  background: var(--red);
+  background: #0E0B08;
   color: #fff;
-  padding: max(28px, env(safe-area-inset-top)) 18px 18px;
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
+  padding: max(28px, env(safe-area-inset-top)) 18px 20px;
 }
 .brand-eyebrow {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.18em;
-  opacity: 0.85;
+  opacity: 0.45;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
 }
 .brand-title-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+  gap: 12px;
 }
 .brand-title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 1.15;
 }
 .counter-pill {
   background: rgba(0,0,0,0.78);
@@ -792,9 +791,9 @@ input[type=file] { display: none; }
 
 <!-- BRAND HEADER -->
 <div class="brand-header">
-  <div class="brand-eyebrow">DROZDA NÁŘADÍ</div>
+  <div class="brand-eyebrow">PRODLOUŽENÁ ZÁRUKA · NAHRÁNÍ FOTEK</div>
   <div class="brand-title-row">
-    <div class="brand-title">Záruky</div>
+    <div class="brand-title">Pojďme to<br>zaregistrovat.</div>
     <div class="counter-pill">
       <span class="dot"></span>
       <span id="badge-text">0 FOTEK</span>
@@ -821,6 +820,12 @@ input[type=file] { display: none; }
       </div>
     </div>
     <div class="accordion-body" id="accordion-body" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="height:1px;flex:1;background:var(--hairline)"></div>
+        <span style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap">Postup krok po kroku</span>
+        <div style="height:1px;flex:1;background:var(--hairline)"></div>
+      </div>
+
       <div style="display:flex;flex-direction:column;gap:8px">
 
         <!-- KROK 1 -->
