@@ -113,8 +113,10 @@ body {
   flex-shrink: 0;
   transition: all 0.25s ease;
 }
-.acc-step.active .acc-num { border-color: var(--red); background: var(--red); color: #fff; }
-.acc-step.done .acc-num   { border-color: #30a46c; background: #30a46c; color: #fff; }
+.acc-step.active .acc-num,
+.acc-num.active { border-color: var(--red); background: var(--red); color: #fff; }
+.acc-step.done .acc-num,
+.acc-num.done   { border-color: #30a46c; background: #30a46c; color: #fff; }
 .acc-step-title {
   font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.25;
   transition: color 0.25s;
@@ -827,59 +829,26 @@ input[type=file] { display: none; }
     </div>
   </div>
 
-  <!-- KROKY — vždy viditelné -->
-  <div style="display:flex;flex-direction:column;gap:8px">
-    <div style="display:flex;align-items:center;gap:10px">
-      <div style="height:1px;flex:1;background:var(--hairline)"></div>
-      <span style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap">Postup</span>
-      <div style="height:1px;flex:1;background:var(--hairline)"></div>
-    </div>
-
-    <div class="acc-step" id="step1">
-      <div class="acc-step-head">
-        <div class="acc-num" id="step1-bubble">1</div>
-        <div>
-          <div class="acc-step-title">Zadejte název firmy nebo jméno</div>
-          <div class="acc-step-sub">Povinný údaj pro správné zařazení záruky</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acc-step" id="step2">
-      <div class="acc-step-head">
-        <div class="acc-num" id="step2-bubble">2</div>
-        <div>
-          <div class="acc-step-title">Vyfoťte QR nálepku nebo štítek</div>
-          <div class="acc-step-sub">Ostrý a čitelný — viz návod výše</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acc-step" id="step3">
-      <div class="acc-step-head">
-        <div class="acc-num" id="step3-bubble">3</div>
-        <div>
-          <div class="acc-step-title">Klikněte „Odeslat"</div>
-          <div class="acc-step-sub">Fotky se nahrají automaticky na Drive</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- FIRMA -->
-  <div>
+  <div id="step1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <p class="s-label" style="margin:0">Název firmy nebo jméno</p>
-      <span style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:0.04em;text-transform:uppercase">* Povinný údaj</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="acc-num" id="step1-bubble">1</div>
+        <p class="s-label" style="margin:0">Název firmy nebo jméno</p>
+      </div>
+      <span style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:0.04em;text-transform:uppercase">* Povinný</span>
     </div>
     <input class="field" type="text" id="firma" placeholder="Zadej název firmy…"
            autocomplete="off" autocorrect="off" spellcheck="false" oninput="onFirma()">
   </div>
 
   <!-- FOTKY -->
-  <div>
+  <div id="step2">
     <div class="photos-header">
-      <p class="s-label" style="margin:0">Fotky</p>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="acc-num" id="step2-bubble">2</div>
+        <p class="s-label" style="margin:0">Fotky</p>
+      </div>
       <span class="photo-counter" id="counter-val">0 / 10</span>
     </div>
     <button class="list-row" id="btnFoto" onclick="spustKameru()" style="background:var(--red);border-color:var(--red);box-shadow:0 1px 0 var(--red-deep) inset,0 8px 20px -8px rgba(225,31,42,0.45);margin-bottom:8px">
@@ -902,7 +871,11 @@ input[type=file] { display: none; }
   <div class="countdown" id="countdown"></div>
 
   <!-- ACTIONS -->
-  <div class="action-list">
+  <div class="action-list" id="step3">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <div class="acc-num" id="step3-bubble">3</div>
+      <p class="s-label" style="margin:0">Odeslat</p>
+    </div>
 
     <button class="list-row green is-disabled" id="btnUpload" onclick="nahrat()">
       <div class="list-icon white-trans">
@@ -1162,17 +1135,16 @@ function updateSteps() {
   var canSend  = hasFirma && hasFotos;
   var CHECK = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
-  function setState(id, state) {
-    var el = document.getElementById(id);
-    el.className = 'acc-step' + (state === 'done' ? ' done' : state === 'active' ? ' active' : '');
-    var bubble = document.getElementById(id + '-bubble');
-    if (!bubble) return;
-    bubble.innerHTML = state === 'done' ? CHECK : id.replace('step','');
+  function setBubble(id, state, num) {
+    var b = document.getElementById(id);
+    if (!b) return;
+    b.className = 'acc-num' + (state === 'done' ? ' done' : state === 'active' ? ' active' : '');
+    b.innerHTML = state === 'done' ? CHECK : num;
   }
 
-  setState('step1', hasFirma ? 'done' : 'active');
-  setState('step2', hasFotos ? 'done' : hasFirma ? 'active' : '');
-  setState('step3', canSend  ? 'active' : '');
+  setBubble('step1-bubble', hasFirma ? 'done' : 'active', '1');
+  setBubble('step2-bubble', hasFotos ? 'done' : hasFirma ? 'active' : '', '2');
+  setBubble('step3-bubble', canSend  ? 'active' : '', '3');
 }
 
 /* ── FIRMA CHECK ── */
