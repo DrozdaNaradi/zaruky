@@ -407,6 +407,82 @@ body {
 .btn-reset:active { opacity: 0.6; }
 
 input[type=file] { display: none; }
+
+/* ── UPLOAD OVERLAY ── */
+.upload-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,12,10,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.upload-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+.upload-spinner-wrap {
+  position: relative;
+  width: 80px; height: 80px;
+}
+.upload-spinner-wrap svg.ring {
+  position: absolute;
+  inset: 0;
+  animation: spin 1.2s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.upload-spinner-wrap .icon-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.upload-label {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+.upload-sublabel {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-top: -20px;
+  font-weight: 500;
+  text-align: center;
+}
+.upload-track {
+  width: 220px;
+  height: 4px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.upload-fill {
+  height: 100%;
+  background: var(--red);
+  border-radius: 99px;
+  width: 0%;
+  transition: width 0.35s ease;
+}
+.upload-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+  margin-top: -20px;
+  letter-spacing: 0.05em;
+}
 </style>
 </head>
 <body>
@@ -478,7 +554,10 @@ input[type=file] { display: none; }
 
   <!-- FIRMA -->
   <div>
-    <p class="s-label">Název firmy nebo jméno</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <p class="s-label" style="margin:0">Název firmy nebo jméno</p>
+      <span style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:0.04em;text-transform:uppercase">* Povinný údaj</span>
+    </div>
     <input class="field" type="text" id="firma" placeholder="Zadej název firmy…"
            autocomplete="off" autocorrect="off" spellcheck="false" oninput="onFirma()">
   </div>
@@ -552,6 +631,27 @@ input[type=file] { display: none; }
   </div>
 
 </div><!-- /page -->
+
+<!-- UPLOAD OVERLAY -->
+<div class="upload-overlay" id="uploadOverlay">
+  <div class="upload-spinner-wrap">
+    <svg class="ring" width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="34" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+      <path d="M40 6 A34 34 0 0 1 74 40" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <div class="icon-center">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
+  </div>
+  <div class="upload-label">Nahrávám fotky…</div>
+  <div class="upload-sublabel" id="overlaySubLabel">Připojuji se na Drive</div>
+  <div class="upload-track"><div class="upload-fill" id="overlayFill"></div></div>
+  <div class="upload-count" id="overlayCount">0 / 0</div>
+</div>
 
 <!-- Hidden file inputs -->
 <input type="file" id="inputKamera" accept="image/*" capture="environment" onchange="pridatFoto(this)">
@@ -715,9 +815,16 @@ async function nahrat() {
   var btn = document.getElementById('btnUpload');
   btn.disabled = true;
   btn.classList.add('is-disabled');
+
+  // Zobraz overlay
+  var overlay = document.getElementById('uploadOverlay');
+  document.getElementById('overlayFill').style.width = '0%';
+  document.getElementById('overlayCount').textContent = '0 / ' + pending.length;
+  document.getElementById('overlaySubLabel').textContent = 'Připojuji se na Drive';
+  overlay.classList.add('visible');
+
   document.getElementById('progWrap').style.display = 'block';
   document.getElementById('progBar').style.width = '0%';
-  showStatus('Nahrávám ' + pending.length + ' ' + (pending.length < 5 ? 'fotky' : 'fotek') + '...', 'warn');
 
   var total = pending.length, done = 0, errors = 0;
   for (var i = 0; i < fotos.length; i++) {
@@ -737,9 +844,16 @@ async function nahrat() {
       var r = await resp.json();
       if (r.status === 'ok') { f.status = 'ok'; done++; } else { f.status = 'err'; errors++; }
     } catch(e) { f.status = 'err'; errors++; }
-    document.getElementById('progBar').style.width = Math.round(((done + errors) / total) * 100) + '%';
+    var pct = Math.round(((done + errors) / total) * 100);
+    document.getElementById('progBar').style.width = pct + '%';
+    document.getElementById('overlayFill').style.width = pct + '%';
+    document.getElementById('overlayCount').textContent = (done + errors) + ' / ' + total;
+    document.getElementById('overlaySubLabel').textContent = 'Nahrávám fotku ' + (done + errors) + ' z ' + total;
     renderGrid();
   }
+
+  // Skryj overlay
+  document.getElementById('uploadOverlay').classList.remove('visible');
 
   if (errors === 0) {
     document.getElementById('progBar').classList.add('done');
