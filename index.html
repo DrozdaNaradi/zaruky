@@ -87,70 +87,62 @@ body {
   flex-shrink: 0;
 }
 
-/* ── STEPS STRIP ── */
-.steps-strip {
+/* ── ACCORDION STEPS ── */
+.acc-step {
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color 0.25s, background 0.25s;
+}
+.acc-step.active { border-color: rgba(225,31,42,0.25); background: rgba(225,31,42,0.03); }
+.acc-step.done   { border-color: rgba(48,164,108,0.3); background: rgba(48,164,108,0.04); }
+.acc-step-head {
   display: flex;
   align-items: center;
-  padding: 14px 20px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--hairline);
-  gap: 0;
+  gap: 10px;
+  padding: 11px 12px;
 }
-.step-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  flex: 1;
-  position: relative;
-}
-.step-item + .step-item::before {
-  content: '';
-  position: absolute;
-  left: -50%;
-  top: 13px;
-  width: 100%;
-  height: 2px;
-  background: var(--hairline);
-  z-index: 0;
-  transition: background 0.3s;
-}
-.step-item.done + .step-item::before { background: #30a46c; }
-.step-bubble {
-  width: 26px; height: 26px;
+.acc-num {
+  width: 24px; height: 24px;
   border-radius: 50%;
   border: 2px solid var(--hairline);
-  background: var(--bg);
+  background: var(--surface);
   color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 11px; font-weight: 800;
   display: flex; align-items: center; justify-content: center;
-  position: relative;
-  z-index: 1;
-  transition: all 0.25s ease;
   flex-shrink: 0;
+  transition: all 0.25s ease;
 }
-.step-item.active .step-bubble {
-  border-color: var(--red);
-  background: var(--red);
-  color: #fff;
-}
-.step-item.done .step-bubble {
-  border-color: #30a46c;
-  background: #30a46c;
-  color: #fff;
-}
-.step-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--muted);
-  letter-spacing: 0.03em;
-  text-align: center;
-  white-space: nowrap;
+.acc-step.active .acc-num { border-color: var(--red); background: var(--red); color: #fff; }
+.acc-step.done .acc-num   { border-color: #30a46c; background: #30a46c; color: #fff; }
+.acc-step-title {
+  font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.25;
   transition: color 0.25s;
 }
-.step-item.active .step-label { color: var(--red); }
-.step-item.done .step-label { color: #30a46c; }
+.acc-step.done .acc-step-title { color: #30a46c; }
+.acc-step-sub { font-size: 11.5px; color: var(--muted); font-weight: 500; margin-top: 1px; }
+.acc-step-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+.acc-photo-card {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+}
+.acc-photo-img { aspect-ratio: 4/3; background: #000; overflow: hidden; }
+.acc-photo-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.acc-photo-cap {
+  padding: 6px 8px;
+  font-size: 11px; font-weight: 800;
+  color: var(--ink);
+  display: flex; flex-direction: column; gap: 1px;
+}
+.acc-photo-cap span { font-size: 10px; font-weight: 500; color: var(--muted); }
 
 /* ── PAGE ── */
 .page {
@@ -810,22 +802,6 @@ input[type=file] { display: none; }
   </div>
 </div>
 
-<!-- STEPS STRIP -->
-<div class="steps-strip">
-  <div class="step-item active" id="step1">
-    <div class="step-bubble" id="step1-bubble">1</div>
-    <div class="step-label">Název</div>
-  </div>
-  <div class="step-item" id="step2">
-    <div class="step-bubble" id="step2-bubble">2</div>
-    <div class="step-label">Vyfotit</div>
-  </div>
-  <div class="step-item" id="step3">
-    <div class="step-bubble" id="step3-bubble">3</div>
-    <div class="step-label">Odeslat</div>
-  </div>
-</div>
-
 <div class="page">
 
   <!-- ACCORDION -->
@@ -845,40 +821,55 @@ input[type=file] { display: none; }
       </div>
     </div>
     <div class="accordion-body" id="accordion-body">
-      <div class="examples-grid">
-        <div class="example-card">
-          <div class="example-photo">
-            <img src="assets/example-qr.jpg" alt="Příklad — QR nálepka na obalu stroje">
-          </div>
-          <div class="example-caption">
-            <div class="cap-title">① QR nálepka</div>
-            <div class="cap-sub">na obalu stroje</div>
-          </div>
-        </div>
-        <div class="example-card">
-          <div class="example-photo">
-            <img src="assets/example-label.jpg" alt="Příklad — štítek na stroji">
-          </div>
-          <div class="example-caption">
-            <div class="cap-title">② Štítek</div>
-            <div class="cap-sub">pokud QR chybí</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+
+        <!-- KROK 1 -->
+        <div class="acc-step" id="step1">
+          <div class="acc-step-head">
+            <div class="acc-num" id="step1-bubble">1</div>
+            <div>
+              <div class="acc-step-title">Zadejte název firmy nebo jméno</div>
+              <div class="acc-step-sub">Povinný údaj pro správné zařazení záruky</div>
+            </div>
           </div>
         </div>
+
+        <!-- KROK 2 -->
+        <div class="acc-step" id="step2">
+          <div class="acc-step-head">
+            <div class="acc-num" id="step2-bubble">2</div>
+            <div>
+              <div class="acc-step-title">Vyfoťte QR nálepku nebo štítek</div>
+              <div class="acc-step-sub">Musí být ostrý a čitelný na fotce</div>
+            </div>
+          </div>
+          <div class="acc-step-photos">
+            <div class="acc-photo-card">
+              <div class="acc-photo-img"><img src="assets/example-qr.jpg" alt="QR nálepka"></div>
+              <div class="acc-photo-cap">① QR nálepka<span>na obalu stroje</span></div>
+            </div>
+            <div class="acc-photo-card">
+              <div class="acc-photo-img"><img src="assets/example-label.jpg" alt="Štítek"></div>
+              <div class="acc-photo-cap">② Štítek<span>pokud QR chybí</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KROK 3 -->
+        <div class="acc-step" id="step3">
+          <div class="acc-step-head">
+            <div class="acc-num" id="step3-bubble">3</div>
+            <div>
+              <div class="acc-step-title">Klikněte „Odeslat"</div>
+              <div class="acc-step-sub">Fotky se nahrají automaticky na Drive</div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="instruct-text">
-        Vyfoťte <strong>QR nálepku</strong> z obalu stroje. Pokud na obalu není, vyfoťte <strong>štítek, který je na stroji</strong>.
-      </div>
-      <div class="callout-red">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        <div><strong>Důležité:</strong> QR kód i štítek musí být na fotce <strong>dobře čitelný</strong>.</div>
-      </div>
-      <button onclick="openNavod()" style="margin-top:12px;width:100%;padding:11px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;letter-spacing:-0.005em">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Zobrazit návod krok po kroku
+      <button onclick="openNavod()" style="margin-top:10px;width:100%;padding:10px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.005em">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Podrobný návod s fotkami
       </button>
     </div>
   </div>
@@ -1174,13 +1165,14 @@ function updateSteps() {
   var hasFirma = document.getElementById('firma').value.trim() !== '';
   var hasFotos = fotos.length > 0;
   var canSend  = hasFirma && hasFotos;
+  var CHECK = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
   function setState(id, state) {
     var el = document.getElementById(id);
-    el.className = 'step-item' + (state === 'done' ? ' done' : state === 'active' ? ' active' : '');
-    var bubble = el.querySelector('.step-bubble');
-    if (state === 'done') bubble.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-    else bubble.textContent = id.replace('step','');
+    el.className = 'acc-step' + (state === 'done' ? ' done' : state === 'active' ? ' active' : '');
+    var bubble = document.getElementById(id + '-bubble');
+    if (!bubble) return;
+    bubble.innerHTML = state === 'done' ? CHECK : id.replace('step','');
   }
 
   setState('step1', hasFirma ? 'done' : 'active');
