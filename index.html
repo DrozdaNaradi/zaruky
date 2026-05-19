@@ -1407,7 +1407,7 @@ async function nahrat() {
     cd.textContent = 'Resetování za ' + sec + '...';
     countdownTimer = setInterval(function() {
       sec--;
-      if (sec <= 0) { clearInterval(countdownTimer); resetAll(); }
+      if (sec <= 0) { clearInterval(countdownTimer); resetAll(true); }
       else { cd.textContent = 'Resetování za ' + sec + '...'; }
     }, 1000);
   } else if (done > 0) {
@@ -1449,10 +1449,12 @@ function closeValPopup(e) {
 }
 
 /* ── RESET ── */
-function resetAll() {
+function resetAll(silent) {
   if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
-  var hasData = fotos.length > 0 || document.getElementById('firma').value.trim();
-  if (hasData && !confirm('Resetovat formulář? Všechny fotky budou smazány.')) return;
+  if (!silent) {
+    var hasData = fotos.length > 0 || document.getElementById('firma').value.trim();
+    if (hasData && !confirm('Resetovat formulář? Všechny fotky budou smazány.')) return;
+  }
   fotos = []; currentFolder = '';
   document.getElementById('firma').value = '';
   document.getElementById('badge-text').textContent = '0 FOTEK';
