@@ -836,19 +836,27 @@ async function nahrat() {
     var f = fotos[i];
     if (f.status !== 'wait' && f.status !== 'err') continue;
     f.status = 'uploading'; renderGrid();
-    try {
-      var resp = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          folder: currentFolder,
-          filename: currentFolder + '_foto' + pad(i+1) + '.jpg',
-          filedata: toBase64(f.data),
-          mimetype: 'image/jpeg'
-        })
-      });
-      var r = await resp.json();
-      if (r.status === 'ok') { f.status = 'ok'; done++; } else { f.status = 'err'; errors++; }
-    } catch(e) { f.status = 'err'; errors++; }
+    var uploaded = false;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      try {
+        var resp = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            folder: currentFolder,
+            filename: currentFolder + '_foto' + pad(i+1) + '.jpg',
+            filedata: toBase64(f.data),
+            mimetype: 'image/jpeg'
+          })
+        });
+        var r = await resp.json();
+        if (r.status === 'ok') { f.status = 'ok'; done++; uploaded = true; break; }
+      } catch(e) {}
+      if (!uploaded && attempt < 2) {
+        document.getElementById('overlaySubLabel').textContent = 'Zkouším znovu (' + (attempt+2) + '/3)…';
+        await new Promise(function(res){ setTimeout(res, 2000); });
+      }
+    }
+    if (!uploaded) { f.status = 'err'; errors++; }
     var pct = Math.round(((done + errors) / total) * 100);
     document.getElementById('progBar').style.width = pct + '%';
     document.getElementById('overlayFill').style.width = pct + '%';
