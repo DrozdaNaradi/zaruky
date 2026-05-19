@@ -408,6 +408,119 @@ body {
 
 input[type=file] { display: none; }
 
+/* ── NAVOD MODAL ── */
+.navod-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,12,10,0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 996;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.navod-modal.visible { opacity: 1; pointer-events: all; }
+.navod-sheet {
+  background: var(--bg);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 430px;
+  max-height: 92vh;
+  overflow-y: auto;
+  transform: translateY(30px);
+  transition: transform 0.28s ease;
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+.navod-modal.visible .navod-sheet { transform: translateY(0); }
+.navod-sheet::-webkit-scrollbar { display: none; }
+.navod-handle {
+  width: 36px; height: 4px;
+  background: var(--hairline);
+  border-radius: 99px;
+  margin: 14px auto 0;
+}
+.navod-header {
+  padding: 16px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navod-title { font-size: 18px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+.navod-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.navod-steps { padding: 20px 20px 28px; display: flex; flex-direction: column; gap: 12px; }
+.navod-step {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.navod-step-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+}
+.navod-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.navod-step-title { font-size: 14.5px; font-weight: 800; color: var(--ink); line-height: 1.25; }
+.navod-step-sub { font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 2px; line-height: 1.4; }
+.navod-step-photo {
+  margin: 0 14px 14px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  aspect-ratio: 16/9;
+  background: #000;
+}
+.navod-step-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.navod-step-tip {
+  margin: 0 14px 14px;
+  padding: 9px 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  font-weight: 500;
+  line-height: 1.45;
+}
+.navod-cta {
+  margin: 0 20px 8px;
+  width: calc(100% - 40px);
+  padding: 14px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'Manrope', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 0 var(--green-2) inset;
+  letter-spacing: -0.005em;
+}
+.navod-cta:active { opacity: 0.85; }
+
 /* ── FIRMA POPUP ── */
 .firma-popup {
   position: fixed;
@@ -682,6 +795,10 @@ input[type=file] { display: none; }
         </svg>
         <div><strong>Důležité:</strong> QR kód i štítek musí být na fotce <strong>dobře čitelný</strong>.</div>
       </div>
+      <button onclick="openNavod()" style="margin-top:12px;width:100%;padding:11px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;letter-spacing:-0.005em">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Zobrazit návod krok po kroku
+      </button>
     </div>
   </div>
 
@@ -762,6 +879,80 @@ input[type=file] { display: none; }
   </div>
 
 </div><!-- /page -->
+
+<!-- NAVOD MODAL -->
+<div class="navod-modal" id="navodModal" onclick="if(event.target===this)closeNavod()">
+  <div class="navod-sheet">
+    <div class="navod-handle"></div>
+    <div class="navod-header">
+      <div class="navod-title">Jak to funguje?</div>
+      <button class="navod-close" onclick="closeNavod()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="navod-steps">
+
+      <!-- KROK 1 -->
+      <div class="navod-step">
+        <div class="navod-step-head">
+          <div class="navod-num">1</div>
+          <div>
+            <div class="navod-step-title">Zadejte název firmy nebo jméno</div>
+            <div class="navod-step-sub">Povinný údaj — slouží k správnému zařazení záruky</div>
+          </div>
+        </div>
+        <div class="navod-step-tip">✏️ Například: <strong>Firma Novák s.r.o.</strong> nebo <strong>Jan Novák</strong></div>
+      </div>
+
+      <!-- KROK 2 -->
+      <div class="navod-step">
+        <div class="navod-step-head">
+          <div class="navod-num">2</div>
+          <div>
+            <div class="navod-step-title">Vyfoťte QR nálepku na obalu</div>
+            <div class="navod-step-sub">QR kód se nachází na krabici nebo obalu stroje</div>
+          </div>
+        </div>
+        <div class="navod-step-photo">
+          <img src="assets/example-qr.jpg" alt="QR nálepka na obalu stroje">
+        </div>
+        <div class="navod-step-tip">📸 Celý QR kód musí být na fotce <strong>ostrý a čitelný</strong> — přiblížit se klidně blíž</div>
+      </div>
+
+      <!-- KROK 3 -->
+      <div class="navod-step">
+        <div class="navod-step-head">
+          <div class="navod-num">3</div>
+          <div>
+            <div class="navod-step-title">Pokud QR chybí — vyfoťte štítek</div>
+            <div class="navod-step-sub">Štítek je přímo na těle stroje — obsahuje sériové číslo</div>
+          </div>
+        </div>
+        <div class="navod-step-photo">
+          <img src="assets/example-label.jpg" alt="Štítek na těle stroje">
+        </div>
+        <div class="navod-step-tip">🔍 Celý text na štítku musí být <strong>čitelný</strong> — zejména číslo Code nebo S/N</div>
+      </div>
+
+      <!-- KROK 4 -->
+      <div class="navod-step">
+        <div class="navod-step-head">
+          <div class="navod-num">4</div>
+          <div>
+            <div class="navod-step-title">Klikněte „Mám všechny fotky — odeslat"</div>
+            <div class="navod-step-sub">Fotky se automaticky nahrají na Google Drive</div>
+          </div>
+        </div>
+        <div class="navod-step-tip">✅ Po odeslání dostanete potvrzení. Hotovo — záruka je zaregistrována!</div>
+      </div>
+
+    </div>
+
+    <button class="navod-cta" onclick="closeNavod()">Rozumím, začínám</button>
+    <div style="height:12px"></div>
+  </div>
+</div>
 
 <!-- FIRMA POPUP -->
 <div class="firma-popup" id="firmaPopup" onclick="if(event.target===this)closeFirmaPopup()">
@@ -891,6 +1082,10 @@ function komprimuj(file, cb) {
   };
   reader.readAsDataURL(file);
 }
+
+/* ── NAVOD MODAL ── */
+function openNavod() { document.getElementById('navodModal').classList.add('visible'); }
+function closeNavod() { document.getElementById('navodModal').classList.remove('visible'); }
 
 /* ── FIRMA CHECK ── */
 function firmaChybi() {
