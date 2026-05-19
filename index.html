@@ -663,7 +663,8 @@ function renderGrid() {
   if (targetCells > 11) targetCells = 11;
   var emptyCount = targetCells - 1 - n;
 
-  var html = '<button class="photo-tile add" onclick="spustKameru()" aria-label="Přidat fotku"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Přidat foto</span></button>';
+  var addLabel = n === 0 ? 'Přidat foto' : 'Přidat další fotku';
+  var html = '<button class="photo-tile add" onclick="spustKameru()" aria-label="' + addLabel + '"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>' + addLabel + '</span></button>';
 
   fotos.forEach(function(f, i) {
     var badge = '';
