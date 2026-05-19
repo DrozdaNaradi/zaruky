@@ -824,9 +824,40 @@ input[type=file] { display: none; }
       </div>
     </div>
     <div class="accordion-body" id="accordion-body" style="display:none">
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-photo">
+            <img src="assets/example-qr.jpg" alt="Příklad — QR nálepka na obalu stroje">
+          </div>
+          <div class="example-caption">
+            <div class="cap-title">① QR nálepka</div>
+            <div class="cap-sub">na obalu stroje</div>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-photo">
+            <img src="assets/example-label.jpg" alt="Příklad — štítek na stroji">
+          </div>
+          <div class="example-caption">
+            <div class="cap-title">② Štítek</div>
+            <div class="cap-sub">pokud QR chybí</div>
+          </div>
+        </div>
+      </div>
+      <div class="instruct-text">
+        Vyfoťte <strong>QR nálepku</strong> z obalu stroje. Pokud na obalu není, vyfoťte <strong>štítek, který je na stroji</strong>.
+      </div>
+      <div class="callout-red">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <div><strong>Důležité:</strong> QR kód i štítek musí být na fotce <strong>dobře čitelný</strong>.</div>
+      </div>
       <button onclick="openNavod()" style="margin-top:10px;width:100%;padding:10px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-sm);font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.005em">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Podrobný návod s fotkami
+        Podrobný návod krok po kroku
       </button>
     </div>
   </div>
