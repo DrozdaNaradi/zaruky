@@ -1074,12 +1074,13 @@ async function nahrat() {
     // Skryj overlay po 2.5s
     setTimeout(function() {
       document.getElementById('uploadOverlay').classList.remove('visible');
+
       // Reset overlay do původního stavu
       setTimeout(function() {
         document.querySelector('.upload-label').textContent = 'Nahrávám fotky…';
         document.getElementById('overlayFill').style.background = '';
       }, 400);
-    }, 2500);
+    }, 5000);
 
     document.getElementById('progBar').classList.add('done');
     showStatus('✓ Hotovo! Nahráno ' + done + ' ' + (done === 1 ? 'fotka' : done < 5 ? 'fotky' : 'fotek') + ' na Google Drive.', 'ok');
