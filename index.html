@@ -659,7 +659,7 @@ function pridatVice(input) {
 function renderGrid() {
   var n = fotos.length;
   // [+] + photos + empty placeholders, min 6 total
-  var targetCells = Math.max(n + 2, 6);
+  var targetCells = Math.max(n + 2, 8);
   if (targetCells > 11) targetCells = 11;
   var emptyCount = targetCells - 1 - n;
 
@@ -690,8 +690,9 @@ function smazFoto(i) { fotos.splice(i, 1); renderGrid(); }
 
 /* ── CHECK READY ── */
 function checkReady() {
+  var firma = document.getElementById('firma').value.trim();
   var pending = fotos.filter(function(f) { return f.status === 'wait' || f.status === 'err'; });
-  var canSubmit = pending.length > 0;
+  var canSubmit = !!(firma && pending.length > 0);
   var btn = document.getElementById('btnUpload');
   if (canSubmit) {
     btn.classList.remove('is-disabled');
