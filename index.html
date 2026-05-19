@@ -1349,22 +1349,25 @@ async function nahrat() {
     renderGrid();
   }
 
-  // Spusť po dávkách po 3
   var queue = fotos.map(function(f, i) { return { f: f, i: i }; })
-                   .filter(function(x) { return x.f.status === 'uploading' || x.f.status === 'wait' || x.f.status === 'err'; });
-  // reset na wait před startem
-  queue.forEach(function(x) { x.f.status = 'wait'; });
+                   .filter(function(x) { return x.f.status === 'wait' || x.f.status === 'err'; });
 
-  var CONCURRENCY = 3;
+  // První fotka sekvenčně — aby Google Script stihl vytvořit složku
+  if (queue.length > 0) {
+    await uploadOne(queue[0].f, queue[0].i);
+  }
+
+  // Zbytek paralelně po 3
+  var rest = queue.slice(1);
   var qi = 0;
   async function runWorker() {
-    while (qi < queue.length) {
-      var item = queue[qi++];
+    while (qi < rest.length) {
+      var item = rest[qi++];
       await uploadOne(item.f, item.i);
     }
   }
   var workers = [];
-  for (var w = 0; w < Math.min(CONCURRENCY, queue.length); w++) workers.push(runWorker());
+  for (var w = 0; w < Math.min(3, rest.length); w++) workers.push(runWorker());
   await Promise.all(workers);
 
   if (errors === 0) {
